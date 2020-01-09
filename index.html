@@ -204,14 +204,21 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h2 id="基本数值关系"><a href="#基本数值关系" class="headerlink" title="基本数值关系"></a>基本数值关系</h2><p>$$a{\times}b=-b{\times}a$$</p>
-<p>$$(Rb)<em>\times=Rb</em>{\times}R$$</p>
-<h2 id="左乘与右乘"><a href="#左乘与右乘" class="headerlink" title="左乘与右乘"></a>左乘与右乘</h2><p>左乘与右乘的区别：左乘时，扰动的旋转量表达的是在参考坐标系下的角度。<br>例如：当旋转表达在相对于world系时，左乘的扰动量是world系下的；<br>当旋转表达在body系下时，左乘的扰动量是body系下的。<br>$$\omega_W=R_{WB}<em>\omega_B\<br>\dot{R}_{WB}=\omega_W^\wedge</em>R_{WB}=R_{WB}*\omega_B^\wedge<br>$$</p>
-<h2 id="左乘与右乘的使用情形"><a href="#左乘与右乘的使用情形" class="headerlink" title="左乘与右乘的使用情形"></a>左乘与右乘的使用情形</h2><p>VIN预积分中，协方差的推导采用右乘的方式，因为方程是在body系下递推的，协方差在body系下，理应右乘；</p>
+          <h2 id="基本数值关系"><a href="#基本数值关系" class="headerlink" title="基本数值关系"></a>基本数值关系</h2><script type="math/tex; mode=display">a{\times}b=-b{\times}a</script><script type="math/tex; mode=display">(Rb)_\times=Rb_{\times}R</script><h2 id="左乘与右乘"><a href="#左乘与右乘" class="headerlink" title="左乘与右乘"></a>左乘与右乘</h2><p>左乘与右乘的区别：左乘时，扰动的旋转量表达的是在参考坐标系下的角度。<br>例如：当旋转表达在相对于world系时，左乘的扰动量是world系下的；<br>当旋转表达在body系下时，左乘的扰动量是body系下的。</p>
+<script type="math/tex; mode=display">\omega_W=R_{WB}*\omega_B\\
+\dot{R}_{WB}=\omega_W^\wedge*R_{WB}=R_{WB}*\omega_B^\wedge</script><h2 id="左乘与右乘的使用情形"><a href="#左乘与右乘的使用情形" class="headerlink" title="左乘与右乘的使用情形"></a>左乘与右乘的使用情形</h2><p>VIN预积分中，协方差的推导采用右乘的方式，因为方程是在body系下递推的，协方差在body系下，理应右乘；</p>
 <p>MSF-EKF中，DR预测的协方差阵则采用的是左乘推导。因为状态量是world系下的xyz &amp; rpy，理应左乘。<br>sdfs</p>
-<h2 id="四元数与矩阵乘法"><a href="#四元数与矩阵乘法" class="headerlink" title="四元数与矩阵乘法"></a>四元数与矩阵乘法</h2><p>旋转矩阵与四元数在表达旋转时的对应关系<br>$$\dot{R} = \omega ^\wedge*R=\begin{pmatrix} 0 &amp;-\omega_3 &amp; \omega_2 \ \omega_3 &amp; 0 &amp; -\omega_1 \ -\omega_2 &amp; \omega_1 &amp; 0\end{pmatrix} * R\<br>\dot{q} = \delta{q}\otimes{q} \simeq \begin{pmatrix} 0 \ \frac{1}{2}\omega \end{pmatrix}\otimes{q} =<br>\frac{1}{2}\begin{bmatrix}0 &amp; -\omega^T \ \omega &amp; \omega^\wedge\end{bmatrix}q\<br>\dot{q} = q \otimes \delta{q} \simeq q \otimes \begin{pmatrix} 0 \ \frac{1}{2}\omega \end{pmatrix}<br>=\frac{1}{2}\begin{bmatrix} 0 &amp;-\omega^T \ \omega &amp;-\omega^\wedge \end{bmatrix}q<br>$$</p>
-<h2 id="状态量的更新方式"><a href="#状态量的更新方式" class="headerlink" title="状态量的更新方式"></a>状态量的更新方式</h2><p>对于error-state EKF，使用如下四个公式，可进行滤波器更新<br>$$<br>q=\delta{q}\otimes\hat{q}\<br>x=\Delta{x}+\hat{x}\<br>\delta{q}=q\otimes\hat{q}^{-1}\<br>\Delta{x}=x-\hat{x}\<br>$$</p>
-
+<h2 id="四元数与矩阵乘法"><a href="#四元数与矩阵乘法" class="headerlink" title="四元数与矩阵乘法"></a>四元数与矩阵乘法</h2><p>旋转矩阵与四元数在表达旋转时的对应关系</p>
+<script type="math/tex; mode=display">\dot{R} = \omega ^\wedge*R=\begin{pmatrix} 0 &-\omega_3 & \omega_2 \\ \omega_3 & 0 & -\omega_1 \\ -\omega_2 & \omega_1 & 0\end{pmatrix} * R\\
+\dot{q} = \delta{q}\otimes{q} \simeq \begin{pmatrix} 0 \\ \frac{1}{2}\omega \end{pmatrix}\otimes{q} =
+\frac{1}{2}\begin{bmatrix}0 & -\omega^T \\ \omega & \omega^\wedge\end{bmatrix}q\\
+\dot{q} = q \otimes \delta{q} \simeq q \otimes \begin{pmatrix} 0 \\ \frac{1}{2}\omega \end{pmatrix}
+=\frac{1}{2}\begin{bmatrix} 0 &-\omega^T \\ \omega &-\omega^\wedge \end{bmatrix}q</script><h2 id="状态量的更新方式"><a href="#状态量的更新方式" class="headerlink" title="状态量的更新方式"></a>状态量的更新方式</h2><p>对于error-state EKF，使用如下四个公式，可进行滤波器更新</p>
+<script type="math/tex; mode=display">
+q=\delta{q}\otimes\hat{q}\\
+x=\Delta{x}+\hat{x}\\
+\delta{q}=q\otimes\hat{q}^{-1}\\
+\Delta{x}=x-\hat{x}\\</script>
       
     </div>
 
@@ -270,16 +277,12 @@
       
           <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
 <h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-
 <p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
 <h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-
 <p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
 <h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
 <p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
 <h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
 <p>More info: <a href="https://hexo.io/docs/one-command-deployment.html" target="_blank" rel="noopener">Deployment</a></p>
 
       
