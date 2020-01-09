@@ -46,19 +46,21 @@
   };
 </script>
 
-  <meta name="description" content="IMU传感器IMU误差模型误差分类：加速度计和陀螺仪的误差可以分为：确定性误差、随机误差。确定性误差可以事先标定，包括：bias，scale …随机误差通常假设噪声服从高斯分布，包括：高斯白噪声，bias，随机游走 … 确定性误差Bias：理论上，当没有外部作用时，IMU传感器的输出应该为0，但是，实际数据存在一个偏置$\pmb{b}$。加速度计bias对位姿估计的影响： \pmb{v}_{err">
+  <meta name="description" content="视觉SLAM里的Bundle Adjustment问题已知：状态量初始值：特征点的三维坐标，相机的位姿。系统测量值：特征点在不同图像上的图像坐标。如何估计状态量的最优值？解决方式：构建误差函数，利用最小二乘得到状态量的最优估计： \mathop{\arg\min}\limits_{\pmb{q,p,f}}\sum_{i&#x3D;1}^m\sum_{j&#x3D;1}^n\parallel\pi(\pmb{q}_{w">
 <meta property="og:type" content="article">
-<meta property="og:title" content="IMU传感器">
-<meta property="og:url" content="https://liangsonglee.github.io/2020/01/09/IMU%E4%BC%A0%E6%84%9F%E5%99%A8/index.html">
+<meta property="og:title" content="Bundle Adjustment和最小二乘">
+<meta property="og:url" content="https://liangsonglee.github.io/2020/01/09/Bundle-Adjustment%E5%92%8C%E6%9C%80%E5%B0%8F%E4%BA%8C%E4%B9%98/index.html">
 <meta property="og:site_name" content="Keep Learning">
-<meta property="og:description" content="IMU传感器IMU误差模型误差分类：加速度计和陀螺仪的误差可以分为：确定性误差、随机误差。确定性误差可以事先标定，包括：bias，scale …随机误差通常假设噪声服从高斯分布，包括：高斯白噪声，bias，随机游走 … 确定性误差Bias：理论上，当没有外部作用时，IMU传感器的输出应该为0，但是，实际数据存在一个偏置$\pmb{b}$。加速度计bias对位姿估计的影响： \pmb{v}_{err">
+<meta property="og:description" content="视觉SLAM里的Bundle Adjustment问题已知：状态量初始值：特征点的三维坐标，相机的位姿。系统测量值：特征点在不同图像上的图像坐标。如何估计状态量的最优值？解决方式：构建误差函数，利用最小二乘得到状态量的最优估计： \mathop{\arg\min}\limits_{\pmb{q,p,f}}\sum_{i&#x3D;1}^m\sum_{j&#x3D;1}^n\parallel\pi(\pmb{q}_{w">
 <meta property="og:locale" content="cn">
-<meta property="article:published_time" content="2020-01-09T07:41:00.000Z">
-<meta property="article:modified_time" content="2020-01-09T10:50:21.771Z">
+<meta property="og:image" content="https://github.com/liangsongLee/learning_doc/raw/master/BA.png">
+<meta property="article:published_time" content="2020-01-09T10:51:28.000Z">
+<meta property="article:modified_time" content="2020-01-09T11:25:21.846Z">
 <meta property="article:author" content="Angsong Li">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://github.com/liangsongLee/learning_doc/raw/master/BA.png">
 
-<link rel="canonical" href="https://liangsonglee.github.io/2020/01/09/IMU%E4%BC%A0%E6%84%9F%E5%99%A8/">
+<link rel="canonical" href="https://liangsonglee.github.io/2020/01/09/Bundle-Adjustment%E5%92%8C%E6%9C%80%E5%B0%8F%E4%BA%8C%E4%B9%98/">
 
 
 <script id="page-configurations">
@@ -70,7 +72,7 @@
   };
 </script>
 
-  <title>IMU传感器 | Keep Learning</title>
+  <title>Bundle Adjustment和最小二乘 | Keep Learning</title>
   
 
 
@@ -169,7 +171,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="cn">
-    <link itemprop="mainEntityOfPage" href="https://liangsonglee.github.io/2020/01/09/IMU%E4%BC%A0%E6%84%9F%E5%99%A8/">
+    <link itemprop="mainEntityOfPage" href="https://liangsonglee.github.io/2020/01/09/Bundle-Adjustment%E5%92%8C%E6%9C%80%E5%B0%8F%E4%BA%8C%E4%B9%98/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -182,7 +184,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          IMU传感器
+          Bundle Adjustment和最小二乘
         </h1>
 
         <div class="post-meta">
@@ -193,7 +195,7 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2020-01-09 15:41:00 / Modified: 18:50:21" itemprop="dateCreated datePublished" datetime="2020-01-09T15:41:00+08:00">2020-01-09</time>
+              <time title="Created: 2020-01-09 18:51:28 / Modified: 19:25:21" itemprop="dateCreated datePublished" datetime="2020-01-09T18:51:28+08:00">2020-01-09</time>
             </span>
 
           
@@ -207,38 +209,10 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h1 id="IMU传感器"><a href="#IMU传感器" class="headerlink" title="IMU传感器"></a>IMU传感器</h1><h2 id="IMU误差模型"><a href="#IMU误差模型" class="headerlink" title="IMU误差模型"></a>IMU误差模型</h2><p><strong>误差分类</strong>：加速度计和陀螺仪的误差可以分为：确定性误差、随机误差。<br>确定性误差可以事先标定，包括：<strong>bias</strong>，<strong>scale</strong> …<br>随机误差通常假设噪声服从高斯分布，包括：<strong>高斯白噪声</strong>，<strong>bias</strong>，<strong>随机游走 </strong>…</p>
-<h3 id="确定性误差"><a href="#确定性误差" class="headerlink" title="确定性误差"></a>确定性误差</h3><p><strong>Bias：</strong>理论上，当没有外部作用时，IMU传感器的输出应该为0，但是，实际数据存在一个偏置$\pmb{b}$。加速度计bias对位姿估计的影响：</p>
-<script type="math/tex; mode=display">\pmb{v}_{err} = \pmb{b}_at\\
-\pmb{p}_{err} = \frac 12\pmb{b}_at^2.</script><p><strong>Scale：</strong>实际数值和传感器输出值之间的比值。</p>
-<h3 id="随机误差"><a href="#随机误差" class="headerlink" title="随机误差"></a>随机误差</h3><p><strong>高斯白噪声：</strong>IMU连续时间上受到一个均值为0，方差为$\sigma$，各时刻之间相互独立的高斯过程$n(t)$：</p>
-<script type="math/tex; mode=display">E[n(t)]\equiv0\\
-E[n(t_1)n(t_2)]=\sigma^2\delta(t_1-t_2)</script><p>其中$\delta()$表示狄拉克函数。<br>实际上，IMU传感器获取的数据为<strong>离散采样</strong>，离散和连续高斯白噪声方差之间存在如下关系：</p>
-<script type="math/tex; mode=display">n_d[k]=\sigma_dw[k]</script><p>其中：</p>
-<script type="math/tex; mode=display">w[k]\sim\mathcal{N}(0,1)\\
-\sigma_d=\sigma \frac 1 {\sqrt{\Delta t}}</script><p>即高斯白噪声的连续时间到离散时间之间差一个$\frac 1{\sqrt{\Delta t}}$，$\sqrt\Delta t$是传感器的采样时间。<br>Bias随机游走：通常用维纳过程来建模bias随时间连续变化的过程，离散时间下称之为随机游走。</p>
-<script type="math/tex; mode=display">\dot b(t)=n(t)=\sigma_bw(t)</script><p>其中w是方差为1的白噪声。<br>离散和连续之间的转换：</p>
-<script type="math/tex; mode=display">w[k]\sim\mathcal{N}(0,1)\\
-\sigma_{bd}=\sigma_b\sqrt{\Delta t}</script><p>即bias随机游走的噪声方差从连续时间到离散时间之间需要乘以$\sqrt{\Delta t}$。</p>
-<h2 id="运动模型离散时间处理"><a href="#运动模型离散时间处理" class="headerlink" title="运动模型离散时间处理"></a>运动模型离散时间处理</h2><h3 id="VIO中的IMU模型"><a href="#VIO中的IMU模型" class="headerlink" title="VIO中的IMU模型"></a>VIO中的IMU模型</h3><p>忽略scale的影响，只考虑白噪声和bias随机游走：</p>
-<script type="math/tex; mode=display">\tilde{\pmb{\omega}}^b=\pmb{\omega}^b+\pmb{b}^g+\pmb{n}^g\\
-\tilde{\pmb{a}}^b=\pmb{q}_{bw}(\pmb{a}^w+\pmb{g}^w)+\pmb{b}^a+\pmb{n}^a</script><p>上标$g$表示陀螺仪，$a$表示加速度计，$w$表示在世界坐标系world，$b$表示IMU机体坐标系body。IMUD真实值为$\pmb{\omega}$，$\pmb{a}$，测量值为$\tilde{\pmb{\omega}}$，$\tilde{\pmb{a}}$。<br>P(ose),V(elocity),Q(uaternion)对时间的导数可以写成：</p>
-<script type="math/tex; mode=display">\dot{\pmb{p}}_{wb_t}=\pmb{v}_l^w\\
-\dot{\pmb{v}}_l^w=\pmb{a}_l^w\\
-\dot{\pmb{q}_{wb_l}}=\pmb{q}_{wb_l}\otimes\begin{bmatrix}0 \\ {\frac 12\pmb{\omega}^{b_t}} \end{bmatrix}</script><h3 id="连续时间下IMU运动模型"><a href="#连续时间下IMU运动模型" class="headerlink" title="连续时间下IMU运动模型"></a>连续时间下IMU运动模型</h3><p>根据上述的导数关系，可以从第i时刻的PVQ，通过对IMU的测量值进行积分，得到第j时刻的PVQ：</p>
-<script type="math/tex; mode=display">\pmb{p}_{wb_j}=\pmb{p}_{wb_i}+\pmb{v}_i^w\Delta t+\iint_{t\in[i,j]}(\pmb{q}_{wb_t}\pmb{a}^{b_t}-\pmb{g}^w)\delta t^2\\
-\pmb{v}_j^w=\pmb{v}_i^w+\int_{t\in[i,j]}(\pmb{q}_{wb_t}\pmb{a}^{b_t}-\pmb{g}^w)\delta t\\
-\pmb{q}_{wb_j}=\int_{t\in[i,j]}\pmb{q}_{wb_t}\otimes\begin{bmatrix}0 \\ {\frac 12\pmb{\omega}^{b_t}} \end{bmatrix}\delta t</script><h3 id="运动模型的离散积分——欧拉法"><a href="#运动模型的离散积分——欧拉法" class="headerlink" title="运动模型的离散积分——欧拉法"></a>运动模型的离散积分——欧拉法</h3><p>使用欧拉法，两个相邻时刻k到k+1的位姿是用第k时刻的测量值$\pmb a$，$\pmb{\omega}$来计算。</p>
-<script type="math/tex; mode=display">\pmb{p}_{wb_{k+1}}=\pmb{p}_{wb_k}+\pmb{v}_k^w\Delta t+\frac 12\pmb{a}\Delta t^2\\
-\pmb{v}_{k+1}^w=\pmb{v}_k^w+\pmb{a}\Delta t\\
-\pmb{q}_{wb_{k+1}}=\pmb{q}_{wb_{k}}\otimes\begin{bmatrix}1 \\ {\frac 12\pmb{\omega}\delta t} \end{bmatrix}</script><p>其中，</p>
-<script type="math/tex; mode=display">\pmb a=\pmb{q}_{wb_k}(\pmb{a}^{b_k}-\pmb{b}_k^a)-\pmb{g}^w\\
-\pmb{\omega}=\pmb{\omega}^{b_k}-\pmb{b}_k^g</script><h3 id="运动模型的离散积分——中值法"><a href="#运动模型的离散积分——中值法" class="headerlink" title="运动模型的离散积分——中值法"></a>运动模型的离散积分——中值法</h3><p>使用中值法，两个相邻时刻k到k+1的位姿是用两个时刻的测量值$a$，$\omega$的平均值来计算。</p>
-<script type="math/tex; mode=display">\pmb{p}_{wb_{k+1}}=\pmb{p}_{wb_k}+\pmb{v}_k^w\Delta t+\frac 12\pmb{a}\Delta t^2\\
-\pmb{v}_{k+1}^w=\pmb{v}_k^w+\pmb{a}\Delta t\\
-\pmb{q}_{wb_{k+1}}=\pmb{q}_{wb_{k}}\otimes\begin{bmatrix}1 \\ {\frac 12\pmb{\omega}\delta t} \end{bmatrix}</script><p>其中，</p>
-<script type="math/tex; mode=display">\pmb a=\frac 12[\pmb{q}_{wb_k}(\pmb{a}^{b_k}-\pmb{b}_k^a)-\pmb{g}^w+\pmb{q}_{wb_{k+1}}(\pmb{a}^{b_{k+1}}-\pmb{b}_k^a)-\pmb{g}^w]\\
-\pmb{\omega}=\frac 12[(\pmb{\omega}^{b_k}-\pmb{b}_k^g)+(\pmb{\omega}^{b_{k+1}}-\pmb{b}_k^g)]</script>
+        <h1 id="视觉SLAM里的Bundle-Adjustment问题"><a href="#视觉SLAM里的Bundle-Adjustment问题" class="headerlink" title="视觉SLAM里的Bundle Adjustment问题"></a>视觉SLAM里的Bundle Adjustment问题</h1><p>已知：<br>状态量<strong>初始值</strong>：特征点的三维坐标，相机的位姿。<br>系统测量值：特征点在不同图像上的图像坐标。<br>如何估计状态量的最优值？<br><img src="https://github.com/liangsongLee/learning_doc/raw/master/BA.png" alt="Bundle Adjustment"><br>解决方式：<br>构建误差函数，利用最小二乘得到状态量的最优估计：</p>
+<script type="math/tex; mode=display">\mathop{\arg\min}\limits_{\pmb{q,p,f}}\sum_{i=1}^m\sum_{j=1}^n\parallel\pi(\pmb{q}_{wc_i},\pmb{p}_{wc_i},\pmb{f}_j)-\pmb{z}_{f_j}^{c_i}\parallel_{\Sigma_{i,j}}</script><p>其中：<br>$\pmb q$为旋转四元数<br>$\pmb p$为平移向量<br>$\pmb f$为特征点3D坐标<br>$c_i$为第i个相机坐标系<br>$\pi(\cdot)$为投影函数<br>$\pmb{z}_{f_j}^{c_i}$为$c_i$对$f_j$的观测<br>$\Sigma_{ij}$为$\Sigma$范数</p>
+<h1 id="最小二乘问题的求解"><a href="#最小二乘问题的求解" class="headerlink" title="最小二乘问题的求解"></a>最小二乘问题的求解</h1><h2 id="最小二乘基础概念"><a href="#最小二乘基础概念" class="headerlink" title="最小二乘基础概念"></a>最小二乘基础概念</h2><p>TODO</p>
+
     </div>
 
     
@@ -253,7 +227,7 @@ E[n(t_1)n(t_2)]=\sigma^2\delta(t_1-t_2)</script><p>其中$\delta()$表示狄拉�
   </li>
   <li class="post-copyright-link">
     <strong>Post link: </strong>
-    <a href="https://liangsonglee.github.io/2020/01/09/IMU%E4%BC%A0%E6%84%9F%E5%99%A8/" title="IMU传感器">https://liangsonglee.github.io/2020/01/09/IMU传感器/</a>
+    <a href="https://liangsonglee.github.io/2020/01/09/Bundle-Adjustment%E5%92%8C%E6%9C%80%E5%B0%8F%E4%BA%8C%E4%B9%98/" title="Bundle Adjustment和最小二乘">https://liangsonglee.github.io/2020/01/09/Bundle-Adjustment和最小二乘/</a>
   </li>
   <li class="post-copyright-license">
     <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> unless stating additionally.
@@ -269,11 +243,11 @@ E[n(t_1)n(t_2)]=\sigma^2\delta(t_1-t_2)</script><p>其中$\delta()$表示狄拉�
 
         
     <div class="post-nav">
-      <div class="post-nav-item"></div>
       <div class="post-nav-item">
-    <a href="/2020/01/09/Bundle-Adjustment%E5%92%8C%E6%9C%80%E5%B0%8F%E4%BA%8C%E4%B9%98/" rel="next" title="Bundle Adjustment和最小二乘">
-      Bundle Adjustment和最小二乘 <i class="fa fa-chevron-right"></i>
+    <a href="/2020/01/09/IMU%E4%BC%A0%E6%84%9F%E5%99%A8/" rel="prev" title="IMU传感器">
+      <i class="fa fa-chevron-left"></i> IMU传感器
     </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -333,7 +307,7 @@ E[n(t_1)n(t_2)]=\sigma^2\delta(t_1-t_2)</script><p>其中$\delta()$表示狄拉�
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#IMU传感器"><span class="nav-number">1.</span> <span class="nav-text">IMU传感器</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#IMU误差模型"><span class="nav-number">1.1.</span> <span class="nav-text">IMU误差模型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#确定性误差"><span class="nav-number">1.1.1.</span> <span class="nav-text">确定性误差</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#随机误差"><span class="nav-number">1.1.2.</span> <span class="nav-text">随机误差</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#运动模型离散时间处理"><span class="nav-number">1.2.</span> <span class="nav-text">运动模型离散时间处理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#VIO中的IMU模型"><span class="nav-number">1.2.1.</span> <span class="nav-text">VIO中的IMU模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#连续时间下IMU运动模型"><span class="nav-number">1.2.2.</span> <span class="nav-text">连续时间下IMU运动模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#运动模型的离散积分——欧拉法"><span class="nav-number">1.2.3.</span> <span class="nav-text">运动模型的离散积分——欧拉法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#运动模型的离散积分——中值法"><span class="nav-number">1.2.4.</span> <span class="nav-text">运动模型的离散积分——中值法</span></a></li></ol></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#视觉SLAM里的Bundle-Adjustment问题"><span class="nav-number">1.</span> <span class="nav-text">视觉SLAM里的Bundle Adjustment问题</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#最小二乘问题的求解"><span class="nav-number">2.</span> <span class="nav-text">最小二乘问题的求解</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#最小二乘基础概念"><span class="nav-number">2.1.</span> <span class="nav-text">最小二乘基础概念</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
