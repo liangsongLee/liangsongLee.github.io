@@ -190,7 +190,7 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2020-01-09 15:19:26 / Modified: 15:19:10" itemprop="dateCreated datePublished" datetime="2020-01-09T15:19:26+08:00">2020-01-09</time>
+              <time title="Created: 2020-01-09 15:19:10 / Modified: 15:23:38" itemprop="dateCreated datePublished" datetime="2020-01-09T15:19:10+08:00">2020-01-09</time>
             </span>
 
           
@@ -204,7 +204,8 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="IMU传感器"><a href="#IMU传感器" class="headerlink" title="IMU传感器"></a>IMU传感器</h1><h2 id="IMU误差模型"><a href="#IMU误差模型" class="headerlink" title="IMU误差模型"></a>IMU误差模型</h2><p><strong>误差分类</strong>：加速度计和陀螺仪的误差可以分为：确定性误差、随机误差。<br>确定性误差可以事先标定，包括：<strong>bias</strong>，<strong>scale</strong> …<br>随机误差通常假设噪声服从高斯分布，包括：<strong>高斯白噪声</strong>，<strong>bias</strong>，<strong>随机游走 </strong>…</p>
+          <hr>
+<h2 id="mathjax-true"><a href="#mathjax-true" class="headerlink" title="mathjax:true"></a>mathjax:true</h2><h1 id="IMU传感器"><a href="#IMU传感器" class="headerlink" title="IMU传感器"></a>IMU传感器</h1><h2 id="IMU误差模型"><a href="#IMU误差模型" class="headerlink" title="IMU误差模型"></a>IMU误差模型</h2><p><strong>误差分类</strong>：加速度计和陀螺仪的误差可以分为：确定性误差、随机误差。<br>确定性误差可以事先标定，包括：<strong>bias</strong>，<strong>scale</strong> …<br>随机误差通常假设噪声服从高斯分布，包括：<strong>高斯白噪声</strong>，<strong>bias</strong>，<strong>随机游走 </strong>…</p>
 <h3 id="确定性误差"><a href="#确定性误差" class="headerlink" title="确定性误差"></a>确定性误差</h3><p><strong>Bias：</strong>理论上，当没有外部作用时，IMU传感器的输出应该为0，但是，实际数据存在一个偏置$\pmb{b}$。加速度计bias对位姿估计的影响：</p>
 <script type="math/tex; mode=display">\pmb{v}_{err} = \pmb{b}_at\\
 \pmb{p}_{err} = \frac 12\pmb{b}_at^2.</script><p><strong>Scale：</strong>实际数值和传感器输出值之间的比值。</p>
